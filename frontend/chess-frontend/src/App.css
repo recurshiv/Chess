@@ -1,0 +1,281 @@
+:root {
+    /* --- YOUR CHESS.COM VARIABLES --- */
+    --theme-fingerprint: c5476ed90a932cabac865a1f087462273206c762;
+    --theme-piece-set-id: url('711b9286-b2f4-11ed-99b1-11f4cfc8d51b');
+    --theme-board-style-id: url('7117f00e-b2f4-11ed-a79b-97d5a5754a11');
+    --theme-sound-set-id: url('7120f8de-b2f4-11ed-8c3d-a12327de8f3b');
+    --theme-background-id: url('7110af10-b2f4-11ed-b059-6f5f46f8585e');
+    --theme-background-image: var(--theme-background-override-image, var(--theme-background-url));
+    --theme-background-color: var(--theme-background-override-color, #302E2B);
+    --theme-board-style-image: url('https://images.chesscomfiles.com/chess-themes/boards/icy_sea/200.png');
+    --theme-board-style-coordinate-color-light: #c5d5dc;
+    --theme-board-style-coordinate-color-dark: #7a9db2;
+
+    --theme-board-style-highlight-color: rgba(234, 196, 43, 0.6); /* Nice transparent yellow */
+    --theme-piece-set-wp: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/wp.png');
+    --theme-piece-set-wn: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/wn.png');
+    --theme-piece-set-wr: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/wr.png');
+    --theme-piece-set-wb: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/wb.png');
+    --theme-piece-set-wq: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/wq.png');
+    --theme-piece-set-wk: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/wk.png');
+    --theme-piece-set-bp: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/bp.png');
+    --theme-piece-set-bn: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/bn.png');
+    --theme-piece-set-bb: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/bb.png');
+    --theme-piece-set-br: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/br.png');
+    --theme-piece-set-bq: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/bq.png');
+    --theme-piece-set-bk: url('https://images.chesscomfiles.com/chess-themes/pieces/bases/150/bk.png');
+    --theme-sound-set-mp3-move-self: url('https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3');
+    --theme-sound-set-mp3-capture: url('https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3');
+}
+
+/* --- APP LAYOUT --- */
+body {
+    background-color: var(--theme-background-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: sans-serif;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* --- BOARD STYLES --- */
+.board {
+    display: grid;
+    grid-template-columns: repeat(8, 80px);
+    grid-template-rows: repeat(8, 80px);
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.square {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.square.light { background-color: var(--theme-board-style-coordinate-color-light); }
+.square.dark { background-color: var(--theme-board-style-coordinate-color-dark); }
+.square.selected { background-color: var(--theme-board-style-highlight-color); }
+
+.piece {
+    width: 90%;
+    height: 90%;
+    background-size: cover;
+    background-position: center;
+    z-index: 2;
+    pointer-events: none; /* Let clicks pass through to the square */
+}
+
+/* --- LEGAL MOVE INDICATORS --- */
+.legal-dot {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.legal-capture {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    border: 5px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    z-index: 1;
+    box-sizing: border-box;
+}
+
+.piece {
+    width: 90%;
+    height: 90%;
+    background-size: cover;
+    background-position: center;
+    z-index: 2;
+    cursor: grab; /* Added this to show a hand icon! */
+}
+/* --- LAYOUT REDESIGN --- */
+.game-wrapper {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    background-color: #262421; /* Classic chess sidebar background */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* --- SIDEBAR & MOVES --- */
+.sidebar {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    height: 640px; /* Matches board height */
+}
+
+.turn-indicator {
+    background-color: #302E2B;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    border-bottom: 3px solid var(--theme-board-style-highlight-color);
+}
+
+.move-history {
+    flex-grow: 1;
+    background-color: #302E2B;
+    border-radius: 5px;
+    padding: 10px;
+    overflow-y: auto;
+    color: #c5d5dc;
+    font-family: monospace;
+    font-size: 1.1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: min-content;
+    gap: 5px;
+}
+
+.move-entry {
+    padding: 5px 10px;
+    background-color: #262421;
+    border-radius: 3px;
+    text-align: center;
+}
+
+/* --- PROMOTION MODAL --- */
+.promotion-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+}
+
+.promotion-box {
+    background-color: #e3e3e3;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+}
+
+.promotion-box h3 { margin-top: 0; color: #333; }
+
+.promo-options {
+    display: flex;
+    gap: 15px;
+}
+
+.promo-card {
+    width: 80px;
+    height: 100px;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.promo-card:hover {
+    transform: scale(1.05);
+    background-color: var(--theme-board-style-highlight-color);
+}
+
+.promo-card .piece {
+    width: 60px; height: 60px;
+    position: relative;
+}
+
+.promo-card span {
+    font-weight: bold;
+    color: #333;
+    margin-top: 5px;
+    font-family: sans-serif;
+}
+/* --- GAME OVER MODAL DISPLAY --- */
+.game-over-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.game-over-box {
+    background-color: #302E2B;
+    border: 2px solid var(--theme-board-style-highlight-color);
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    max-width: 400px;
+    width: 80%;
+}
+
+.game-over-box h2 {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #fff;
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.game-over-box p {
+    color: #c5d5dc;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.restart-btn {
+    background-color: #81b64c; /* Chess.com green button */
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    width: 100%;
+}
+
+.restart-btn:hover {
+    background-color: #a3d96c;
+    transform: scale(1.02);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

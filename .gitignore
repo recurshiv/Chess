@@ -1,0 +1,12 @@
+frontend/node_modules/
+frontend/build/
+.pnp
+.pnp.js
+
+backend/build/
+*.o
+*.out
+*.exe
+
+.DS_Store
+Thumbs.db
